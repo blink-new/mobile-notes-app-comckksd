@@ -3,12 +3,13 @@ import { createTamagui } from 'tamagui'
 import { config as defaultConfig } from '@tamagui/config'
 import { InterFont } from '@tamagui/font-inter'
 
+// Use a safe fallback for accent color (use 'primary' as base)
 const config = createTamagui({
   ...defaultConfig,
   theme: {
     ...defaultConfig.theme,
     accent: {
-      ...defaultConfig.theme.blue,
+      ...defaultConfig.theme.primary,
       color: '#fff',
       background: '#7c5cff',
     },
