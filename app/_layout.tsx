@@ -1,16 +1,13 @@
 
 import { Stack } from "expo-router";
-import { TamaguiProvider } from "tamagui";
-import config from "../tamagui.config";
+import { View } from "react-native";
 
 export default function Layout() {
   return (
-    <TamaguiProvider config={config} defaultTheme="light">
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      />
-    </TamaguiProvider>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
   );
 }

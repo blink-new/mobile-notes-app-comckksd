@@ -1,9 +1,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { View, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, ScrollView, TouchableOpacity, Alert, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text, YStack, XStack, Button, Input } from "tamagui";
 
 type Note = {
   id: string;
@@ -13,24 +12,6 @@ type Note = {
 };
 
 const NOTES_KEY = "NOTES_V1";
-
-// Simple SVG icon fallback for Plus
-function PlusIcon({ size = 24, color = "#fff" }) {
-  return (
-    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ color, fontSize: size * 0.9, fontWeight: "bold" }}>+</Text>
-    </View>
-  );
-}
-
-// Simple SVG icon fallback for Trash
-function TrashIcon({ size = 20, color = "#7c5cff" }) {
-  return (
-    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ color, fontSize: size * 0.9 }}>🗑️</Text>
-    </View>
-  );
-}
 
 export default function NotesListScreen() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -82,35 +63,27 @@ export default function NotesListScreen() {
   }, [router]);
 
   return (
-    <YStack f={1} bg="$background" p="$4" pt="$8">
-      <XStack ai="center" jc="space-between" mb="$4">
-        <Text fontFamily="$heading" fontSize={32} fontWeight="700" color="$color" letterSpacing={-1}>
-          Notes
-        </Text>
-        <Button
-          size="$4"
-          circular
-          bg="$accent"
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Notes</Text>
+        <TouchableOpacity 
+          style={styles.addButton} 
           onPress={() => goToEdit()}
-          pressStyle={{ scale: 0.95 }}
-          icon={<PlusIcon />}
-        />
-      </XStack>
+          activeOpacity={0.8}
+        >
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+      </View>
+      
       {loading ? (
-        <Text color="$color" fontSize={18} ta="center" mt="$8">
-          Loading...
-        </Text>
+        <Text style={styles.loadingText}>Loading...</Text>
       ) : notes.length === 0 ? (
-        <YStack ai="center" mt="$10">
-          <Text color="$color" fontSize={20} fontWeight="600" mb="$2">
-            No notes yet
-          </Text>
-          <Text color="$color" fontSize={16} opacity={0.7}>
-            Tap + to create your first note!
-          </Text>
-        </YStack>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyTitle}>No notes yet</Text>
+          <Text style={styles.emptySubtitle}>Tap + to create your first note!</Text>
+        </View>
       ) : (
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={styles.scrollView}>
           {notes
             .sort((a, b) => b.updated - a.updated)
             .map((note) => (
@@ -118,39 +91,126 @@ export default function NotesListScreen() {
                 key={note.id}
                 onPress={() => goToEdit(note)}
                 activeOpacity={0.8}
-                style={{
-                  marginBottom: 18,
-                  borderRadius: 18,
-                  backgroundColor: "#f7f7fa",
-                  shadowColor: "#000",
-                  shadowOpacity: 0.06,
-                  shadowRadius: 8,
-                  elevation: 2,
-                  padding: 18,
-                }}
+                style={styles.noteCard}
               >
-                <XStack ai="center" jc="space-between">
-                  <YStack f={1} pr="$2">
-                    <Text fontSize={18} fontWeight="700" color="#2d2d2d" numberOfLines={1}>
-                      {note.title || "Untitled"}
-                    </Text>
-                    <Text fontSize={15} color="#6b6b6b" numberOfLines={2} mt="$1">
-                      {note.body ? note.body.replace(/\n/g, " ") : "No content"}
-                    </Text>
-                  </YStack>
-                  <Button
-                    size="$2"
-                    circular
-                    chromeless
-                    onPress={() => confirmDelete(note.id)}
-                    pressStyle={{ scale: 0.9 }}
-                    icon={<TrashIcon />}
-                  />
-                </XStack>
+                <View style={styles.noteContent}>
+                  <Text style={styles.noteTitle} numberOfLines={1}>
+                    {note.title || "Untitled"}
+                  </Text>
+                  <Text style={styles.notePreview} numberOfLines={2}>
+                    {note.body ? note.body.replace(/\n/g, " ") : "No content"}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => confirmDelete(note.id)}
+                  style={styles.deleteButton}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Text style={styles.deleteButtonText}>🗑️</Text>
+                </TouchableOpacity>
               </TouchableOpacity>
             ))}
         </ScrollView>
       )}
-    </YStack>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f7f7fa",
+    padding: 16,
+    paddingTop: 60,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#2d2d2d",
+    letterSpacing: -1,
+  },
+  addButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#7c5cff",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#7c5cff",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  addButtonText: {
+    fontSize: 28,
+    color: "white",
+    fontWeight: "600",
+  },
+  loadingText: {
+    fontSize: 18,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 40,
+  },
+  emptyContainer: {
+    alignItems: "center",
+    marginTop: 60,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#2d2d2d",
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    color: "#666",
+    opacity: 0.7,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  noteCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 18,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  noteContent: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  noteTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#2d2d2d",
+  },
+  notePreview: {
+    fontSize: 15,
+    color: "#6b6b6b",
+    marginTop: 4,
+  },
+  deleteButton: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  deleteButtonText: {
+    fontSize: 18,
+  },
+});

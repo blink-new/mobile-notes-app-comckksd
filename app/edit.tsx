@@ -1,9 +1,17 @@
 
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import { useState } from "react";
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  KeyboardAvoidingView, 
+  Platform, 
+  ScrollView 
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { YStack, XStack, Button, Input, TextArea, Text } from "tamagui";
 
 type Note = {
   id: string;
@@ -13,24 +21,6 @@ type Note = {
 };
 
 const NOTES_KEY = "NOTES_V1";
-
-// Simple SVG icon fallback for ArrowLeft
-function ArrowLeftIcon({ size = 24, color = "#7c5cff" }) {
-  return (
-    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ color, fontSize: size * 0.9 }}>←</Text>
-    </View>
-  );
-}
-
-// Simple SVG icon fallback for Save
-function SaveIcon({ size = 22, color = "#fff" }) {
-  return (
-    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ color, fontSize: size * 0.9 }}>💾</Text>
-    </View>
-  );
-}
 
 export default function EditNoteScreen() {
   const router = useRouter();
@@ -70,58 +60,120 @@ export default function EditNoteScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#f7f7fa" }}
+      style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <YStack f={1} p="$4" pt="$8" bg="#f7f7fa">
-        <XStack ai="center" jc="space-between" mb="$4">
-          <Button
-            size="$3"
-            circular
-            chromeless
-            onPress={() => router.back()}
-            pressStyle={{ scale: 0.95 }}
-            icon={<ArrowLeftIcon />}
-          />
-          <Button
-            size="$3"
-            bg="$accent"
-            onPress={saveNote}
-            disabled={saving}
-            pressStyle={{ scale: 0.97 }}
-            icon={<SaveIcon />}
-          >
-            Save
-          </Button>
-        </XStack>
-        <Input
-          placeholder="Title"
-          value={title}
-          onChangeText={setTitle}
-          fontSize={22}
-          fontWeight="700"
-          mb="$3"
-          bg="#fff"
-          borderWidth={0}
-          px="$3"
-          py="$2"
-          borderRadius={12}
-        />
-        <TextArea
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => router.back()}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Text style={styles.backButtonText}>←</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.saveButton, saving && styles.saveButtonDisabled]}
+          onPress={saveNote}
+          disabled={saving}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
+      
+      <TextInput
+        style={styles.titleInput}
+        placeholder="Title"
+        value={title}
+        onChangeText={setTitle}
+        placeholderTextColor="#999"
+      />
+      
+      <ScrollView style={styles.bodyContainer}>
+        <TextInput
+          style={styles.bodyInput}
           placeholder="Start typing your note..."
           value={body}
           onChangeText={setBody}
-          fontSize={17}
-          minHeight={180}
-          bg="#fff"
-          borderWidth={0}
-          px="$3"
-          py="$2"
-          borderRadius={12}
           multiline
-          flex={1}
+          placeholderTextColor="#999"
+          textAlignVertical="top"
         />
-      </YStack>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f7f7fa",
+    padding: 16,
+    paddingTop: 60,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  backButtonText: {
+    fontSize: 24,
+    color: "#7c5cff",
+    fontWeight: "600",
+  },
+  saveButton: {
+    backgroundColor: "#7c5cff",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    shadowColor: "#7c5cff",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  saveButtonDisabled: {
+    opacity: 0.6,
+  },
+  saveButtonText: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  titleInput: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  bodyContainer: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  bodyInput: {
+    flex: 1,
+    padding: 16,
+    fontSize: 17,
+    minHeight: 200,
+  },
+});
