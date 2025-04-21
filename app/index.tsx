@@ -1,8 +1,9 @@
 
 import { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { View, ScrollView, TouchableOpacity, Alert, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback } from "react";
 
 type Note = {
   id: string;
@@ -57,10 +58,12 @@ export default function NotesListScreen() {
     });
   }
 
-  useEffect(() => {
-    const unsubscribe = router.addListener("focus", loadNotes);
-    return unsubscribe;
-  }, [router]);
+  // Fix: Replace router.addListener with useFocusEffect
+  useFocusEffect(
+    useCallback(() => {
+      loadNotes();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
