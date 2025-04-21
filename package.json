@@ -10,15 +10,15 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.1",
-    "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-async-storage/async-storage": "latest",
     "@supabase/supabase-js": "^2.49.4",
     "@tamagui/config": "^1.126.1",
-    "@tamagui/core": "^1.126.1",
-    "@tamagui/font-inter": "^1.126.1",
-    "expo": "~52.0.46",
+    "@tamagui/core": "latest",
+    "@tamagui/font-inter": "latest",
+    "expo": "latest",
     "expo-constants": "^17.0.8",
     "expo-linking": "^7.0.5",
-    "expo-router": "^4.0.20",
+    "expo-router": "latest",
     "expo-status-bar": "^2.0.1",
     "nativewind": "^4.1.23",
     "react": "18.3.1",
@@ -30,7 +30,9 @@
     "react-native-screens": "^4.10.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.19.13",
-    "tamagui": "^1.126.1"
+    "tamagui": "latest",
+    "@tamagui/sheet": "latest",
+    "@tamagui/themed": "latest"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

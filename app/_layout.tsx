@@ -1,10 +1,11 @@
-import { Stack } from 'expo-router';
-import { TamaguiProvider } from 'tamagui';
-import config from '../tamagui.config';
 
-export default function RootLayout() {
+import { Stack } from "expo-router";
+import { TamaguiProvider } from "tamagui";
+import config from "../tamagui.config";
+
+export default function Layout() {
   return (
-    <TamaguiProvider config={config}>
+    <TamaguiProvider config={config} defaultTheme="light">
       <Stack
         screenOptions={{
           headerShown: false,
@@ -12,4 +13,4 @@ export default function RootLayout() {
       />
     </TamaguiProvider>
   );
-} 
+}

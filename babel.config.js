@@ -1,3 +1,4 @@
+
 module.exports = function (api) {
   api.cache(true);
   return {
@@ -5,7 +6,15 @@ module.exports = function (api) {
       'babel-preset-expo'
     ],
     plugins: [
-      'react-native-reanimated/plugin'
+      'react-native-reanimated/plugin',
+      [
+        'tamagui',
+        {
+          config: './tamagui.config.ts',
+          components: ['tamagui'],
+          logTimings: true,
+        },
+      ],
     ]
   };
-}; 
+};
