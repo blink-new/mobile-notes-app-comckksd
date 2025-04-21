@@ -22,6 +22,15 @@ type Note = {
 
 const NOTES_KEY = "NOTES_V1";
 
+// Simple icon components that work on all platforms
+const ArrowLeftIcon = ({ size = 24, color = "#7c5cff" }) => (
+  <Text style={{ color, fontSize: size, fontWeight: "bold" }}>←</Text>
+);
+
+const SaveIcon = ({ size = 18, color = "#fff" }) => (
+  <Text style={{ color, fontSize: size, marginRight: 6 }}>💾</Text>
+);
+
 export default function EditNoteScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -69,7 +78,7 @@ export default function EditNoteScreen() {
           onPress={() => router.back()}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <ArrowLeftIcon />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.saveButton, saving && styles.saveButtonDisabled]}
@@ -77,6 +86,7 @@ export default function EditNoteScreen() {
           disabled={saving}
           activeOpacity={0.8}
         >
+          <SaveIcon />
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -123,16 +133,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  backButtonText: {
-    fontSize: 24,
-    color: "#7c5cff",
-    fontWeight: "600",
-  },
   saveButton: {
     backgroundColor: "#7c5cff",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
     shadowColor: "#7c5cff",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,

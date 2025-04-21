@@ -33,7 +33,8 @@
     "tamagui": "latest",
     "@tamagui/sheet": "latest",
     "@tamagui/themed": "latest",
-    "@tamagui/lucide-icons": "latest"
+    "@tamagui/lucide-icons": "latest",
+    "lucide-react-native": "latest"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

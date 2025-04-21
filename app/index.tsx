@@ -14,6 +14,15 @@ type Note = {
 
 const NOTES_KEY = "NOTES_V1";
 
+// Simple icon components that work on all platforms
+const PlusIcon = ({ size = 24, color = "#fff" }) => (
+  <Text style={{ color, fontSize: size, fontWeight: "bold" }}>+</Text>
+);
+
+const TrashIcon = ({ size = 20, color = "#7c5cff" }) => (
+  <Text style={{ color, fontSize: size }}>🗑️</Text>
+);
+
 export default function NotesListScreen() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +67,7 @@ export default function NotesListScreen() {
     });
   }
 
-  // Fix: Replace router.addListener with useFocusEffect
+  // Use useFocusEffect for screen focus
   useFocusEffect(
     useCallback(() => {
       loadNotes();
@@ -74,7 +83,7 @@ export default function NotesListScreen() {
           onPress={() => goToEdit()}
           activeOpacity={0.8}
         >
-          <Text style={styles.addButtonText}>+</Text>
+          <PlusIcon />
         </TouchableOpacity>
       </View>
       
@@ -109,7 +118,7 @@ export default function NotesListScreen() {
                   style={styles.deleteButton}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Text style={styles.deleteButtonText}>🗑️</Text>
+                  <TrashIcon />
                 </TouchableOpacity>
               </TouchableOpacity>
             ))}
@@ -150,11 +159,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 5,
-  },
-  addButtonText: {
-    fontSize: 28,
-    color: "white",
-    fontWeight: "600",
   },
   loadingText: {
     fontSize: 18,
@@ -212,8 +216,5 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-  },
-  deleteButtonText: {
-    fontSize: 18,
   },
 });
