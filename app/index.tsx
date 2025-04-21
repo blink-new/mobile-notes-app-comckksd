@@ -4,7 +4,6 @@ import { useRouter } from "expo-router";
 import { View, ScrollView, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text, YStack, XStack, Button, Input } from "tamagui";
-import { Plus, Trash2 } from "@tamagui/lucide-icons";
 
 type Note = {
   id: string;
@@ -14,6 +13,24 @@ type Note = {
 };
 
 const NOTES_KEY = "NOTES_V1";
+
+// Simple SVG icon fallback for Plus
+function PlusIcon({ size = 24, color = "#fff" }) {
+  return (
+    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ color, fontSize: size * 0.9, fontWeight: "bold" }}>+</Text>
+    </View>
+  );
+}
+
+// Simple SVG icon fallback for Trash
+function TrashIcon({ size = 20, color = "#7c5cff" }) {
+  return (
+    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ color, fontSize: size * 0.9 }}>🗑️</Text>
+    </View>
+  );
+}
 
 export default function NotesListScreen() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -74,9 +91,9 @@ export default function NotesListScreen() {
           size="$4"
           circular
           bg="$accent"
-          icon={Plus}
           onPress={() => goToEdit()}
           pressStyle={{ scale: 0.95 }}
+          icon={<PlusIcon />}
         />
       </XStack>
       {loading ? (
@@ -125,9 +142,9 @@ export default function NotesListScreen() {
                     size="$2"
                     circular
                     chromeless
-                    icon={Trash2}
                     onPress={() => confirmDelete(note.id)}
                     pressStyle={{ scale: 0.9 }}
+                    icon={<TrashIcon />}
                   />
                 </XStack>
               </TouchableOpacity>

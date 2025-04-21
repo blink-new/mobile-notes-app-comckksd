@@ -1,10 +1,9 @@
 
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { YStack, XStack, Button, Input, TextArea, Text } from "tamagui";
-import { ArrowLeft, Save } from "@tamagui/lucide-icons";
 
 type Note = {
   id: string;
@@ -14,6 +13,24 @@ type Note = {
 };
 
 const NOTES_KEY = "NOTES_V1";
+
+// Simple SVG icon fallback for ArrowLeft
+function ArrowLeftIcon({ size = 24, color = "#7c5cff" }) {
+  return (
+    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ color, fontSize: size * 0.9 }}>←</Text>
+    </View>
+  );
+}
+
+// Simple SVG icon fallback for Save
+function SaveIcon({ size = 22, color = "#fff" }) {
+  return (
+    <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ color, fontSize: size * 0.9 }}>💾</Text>
+    </View>
+  );
+}
 
 export default function EditNoteScreen() {
   const router = useRouter();
@@ -62,17 +79,17 @@ export default function EditNoteScreen() {
             size="$3"
             circular
             chromeless
-            icon={ArrowLeft}
             onPress={() => router.back()}
             pressStyle={{ scale: 0.95 }}
+            icon={<ArrowLeftIcon />}
           />
           <Button
             size="$3"
-            icon={Save}
             bg="$accent"
             onPress={saveNote}
             disabled={saving}
             pressStyle={{ scale: 0.97 }}
+            icon={<SaveIcon />}
           >
             Save
           </Button>
